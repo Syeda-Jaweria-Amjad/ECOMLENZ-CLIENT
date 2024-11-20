@@ -5,7 +5,19 @@ import { CiMenuKebab } from "react-icons/ci";
 import SellersModal from "./Sellermodal";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-
+import { useSelector, useDispatch } from "react-redux";
+import {
+  addSellerAction,
+  clearErrorsAction,
+  loadUserAllSellersAction,
+  pauseSellerAction,
+} from "../Redux/Actions/loadCurrentUserAction";
+import {
+  handleShowFailureToast,
+  handleShowSuccessToast,
+} from "./ToastMessages/ToastMessage";
+import { Toaster } from "react-hot-toast";
+import Loader from "./Loader";
 function Sellers() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -16,19 +28,25 @@ function Sellers() {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null); // For Material-UI dropdown
   const [menuDropdown, setMenuDropdown] = useState(null); // Track active menu dropdown index
   const dropdownRef = useRef(null);
-
-  const sellers = [
-    { name: "Automotive", id: "A22NDRL29NJ355", active: true },
-    { name: "electronics", id: "A5W198TSQJIXA", active: true },
-    { name: "Jalomane LLC", id: "A3UC9NK1EXG1OP", active: true },
-    { name: "Equity With Vision", id: "AKGBUC00BLMHW", active: true },
-    { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-    { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-    { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-    { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-    { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-    { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-  ];
+  const dispatch = useDispatch();
+  const { sellers } = useSelector((state) => state.loadUserAllSellersReducer);
+  const { addSellerLoading, addSellerMessage, addSellerError } = useSelector(
+    (state) => state.addSellerReducer
+  );
+  const { pauseSellerLoading, pauseSellerError, pauseSellerMessage } =
+    useSelector((state) => state.pauseSellerReducer);
+  // const sellers = [
+  //   { name: "Automotive", id: "A22NDRL29NJ355", active: true },
+  //   { name: "electronics", id: "A5W198TSQJIXA", active: true },
+  //   { name: "Jalomane LLC", id: "A3UC9NK1EXG1OP", active: true },
+  //   { name: "Equity With Vision", id: "AKGBUC00BLMHW", active: true },
+  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
+  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
+  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
+  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
+  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
+  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
+  // ];
 
   const toggleBookmark = (index) => {
     setBookmarked((prev) => ({
@@ -65,11 +83,51 @@ function Sellers() {
     setMenuAnchorEl(null); // Close the dropdown
   };
 
+  useEffect(() => {
+    dispatch(clearErrorsAction());
+    dispatch(loadUserAllSellersAction());
+  }, [dispatch]);
+  const [id, setId] = useState(null);
+  const handleAddSeller = () => {
+    if (!id) {
+      alert("Please enter a seller ID");
+      return;
+    }
+    dispatch(addSellerAction(id));
+  };
+
+  useEffect(() => {
+    if (!addSellerLoading && addSellerMessage) {
+      handleShowSuccessToast(addSellerMessage);
+      setId("");
+      dispatch(clearErrorsAction());
+      dispatch(loadUserAllSellersAction());
+    } else if (!addSellerLoading && addSellerError) {
+      setId("");
+      handleShowFailureToast(addSellerError);
+      dispatch(clearErrorsAction());
+    }
+  }, [addSellerMessage, addSellerLoading, addSellerError, dispatch]);
+
+  useEffect(() => {
+    if (!pauseSellerLoading && pauseSellerMessage) {
+      handleShowSuccessToast(pauseSellerMessage);
+      dispatch(clearErrorsAction());
+      dispatch(loadUserAllSellersAction());
+    } else if (!pauseSellerLoading && pauseSellerError) {
+      handleShowFailureToast(pauseSellerError);
+      dispatch(clearErrorsAction());
+    }
+  }, [pauseSellerMessage, pauseSellerLoading, pauseSellerError, dispatch]);
+  const handlePauseSeller = (id) => {
+    dispatch(pauseSellerAction(id));
+  };
   return (
     <div
       className="relative flex flex-col w-full h-full bg-gray-50"
       ref={dropdownRef}
     >
+      <Toaster />
       {/* Modal Button for Mobile */}
       <button
         onClick={() => setIsModalOpen(true)}
@@ -98,55 +156,58 @@ function Sellers() {
         {/* Search, Add, and Sort Section */}
         <div className="relative flex items-center px-6 py-3 bg-gray-50 border-b border-gray-200 space-x-4">
           {/* add seller btn */}
-          <button onClick={() => setAddSellerDropdownOpen(!addSellerDropdownOpen)} className="flex items-center justify-center w-10 h-10 bg-black text-white rounded-md">
+          <button
+            onClick={() => setAddSellerDropdownOpen(!addSellerDropdownOpen)}
+            className="flex items-center justify-center w-10 h-10 bg-black text-white rounded-md"
+          >
             <FiPlus className="text-xl" />
           </button>
           {/* Add seller dialog box */}
-          <div className={`absolute top-12 left-0 z-20 mt-3 origin-top-right rounded-md bg-white py-1 ring-1 ring-black ring-opacity-5 focus:outline-none shadow-xl ${
-                !addSellerDropdownOpen ? "hidden" : ""
-              }`}
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="user-menu-button"
-            >
-              <div className="py-1 px-2 flex gap-2 justify-between">
+          <div
+            className={`absolute top-12 left-0 z-20 mt-3 origin-top-right rounded-md bg-white py-1 ring-1 ring-black ring-opacity-5 focus:outline-none shadow-xl ${
+              !addSellerDropdownOpen ? "hidden" : ""
+            }`}
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="user-menu-button"
+          >
+            <div className="py-1 px-2 flex gap-2 justify-between">
+              <div>
+                <div className="text-md">Seller ID*</div>
                 <div>
-                  <div className="text-md">Seller ID*</div>
-                  <div>
-                    <input
-                      type="text"
-                      className="mt-2 w-40 h-8 px-2 text-sm rounded-md border border-gray-500"
-                      placeholder="Enter Seller ID"
-                      value={''} // Bind to state
-                      // Update state
-                    />
-                  </div>
-                </div>
-                <div className="flex flex-col justify-end items-end gap-2">
-                  <div>
-                    <button className="bg-gray-200 text-black text-sm px-2 rounded">
-                      2/200
-                    </button>
-                  </div>
-                  <div className="flex flex-col justify-end items-end gap-2">
-                    
-                      
-                    
-                      <button
-                        className="text-sm w-20 text-white h-8 px-2 rounded-md bg-black hover:bg-gray-800"
-                        
-                      >
-                        Add Seller
-                      </button>
-                  
-                  </div>
+                  <input
+                    type="text"
+                    className="mt-2 w-40 h-8 px-2 text-sm rounded-md border border-gray-500"
+                    placeholder="Enter Seller ID"
+                    onChange={(e) => setId(e.target.value)}
+                    value={id} // Bind to state
+                    // Update state
+                  />
                 </div>
               </div>
+              <div className="flex flex-col justify-end items-end gap-2">
+                <div>
+                  <button className="bg-gray-200 text-black text-sm px-2 rounded">
+                    2/200
+                  </button>
+                </div>
+                <div className="flex flex-col justify-end items-end gap-2">
+                  {addSellerLoading ? (
+                    <div className="text-sm w-20 text-white h-8 px-2 rounded-md bg-black hover:bg-gray-800 flex justify-center items-center">
+                      <Loader />
+                    </div>
+                  ) : (
+                    <button
+                      className="text-sm w-20 text-white h-8 px-2 rounded-md bg-black hover:bg-gray-800"
+                      onClick={handleAddSeller}
+                    >
+                      Add Seller
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-            
-
-
-
 
           {/* Search bar */}
           <div className="flex-1 flex items-center bg-white border border-gray-300 rounded-md px-3">
@@ -188,7 +249,7 @@ function Sellers() {
               All Sellers
             </div>
             <div className="text-white bg-black rounded-full px-3 py-1 text-sm font-medium">
-              28
+              {sellers && sellers.length}
             </div>
           </div>
           <div>
@@ -226,14 +287,25 @@ function Sellers() {
                   horizontal: "right",
                 }}
               >
-                <MenuItem onClick={handleMenuClose}>Home</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleMenuClose();
+                    handlePauseSeller(seller?.sellerId);
+                  }}
+                >
+                  {seller.pauseStatus.status
+                    ? "Resume Seller"
+                    : "Pause Seller "}
+                </MenuItem>
                 <MenuItem onClick={handleMenuClose}>About</MenuItem>
               </Menu>
 
               {/* Seller details */}
               <div>
-                <div className="text-gray-800 font-semibold">{seller.name}</div>
-                <div className="text-sm text-gray-500">{seller.id}</div>
+                <div className="text-gray-800 font-semibold">
+                  {seller.sellerName}
+                </div>
+                <div className="text-sm text-gray-500">{seller.sellerId}</div>
                 <div className="mt-1 flex items-center">
                   <span
                     className="cursor-pointer text-lg px-1 py-1 border border-gray-300 rounded-md"
@@ -249,7 +321,11 @@ function Sellers() {
                     <span>
                       <FaRegSquare className="text-xs rounded-md bg-[rgb(247,254,231)]" />
                     </span>
-                    <span className="text-sm text-gray-700 ml-2">Active</span>
+                    <span className="text-sm text-gray-700 ml-2">
+                      {seller && seller.pauseStatus.status
+                        ? "Paused"
+                        : "Active"}
+                    </span>
                   </div>
                 </div>
               </div>

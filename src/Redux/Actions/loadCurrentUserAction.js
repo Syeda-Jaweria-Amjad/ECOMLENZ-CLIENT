@@ -24,5 +24,80 @@ const loadCurrentUserAction = () => async (dispatch) => {
     });
   }
 };
+const loadUserAllSellersAction = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "LOAD_USER_ALL_SELLERS_REQUEST",
+    });
+    const response = await fetch(
+      "http://localhost:8000/auth/load-user-all-sellers",
+      {
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    dispatch({
+      type: "LOAD_USER_ALL_SELLERS_SUCCESS",
+      payload: data.sellers,
+    });
+  } catch (error) {
+    dispatch({
+      type: "LOAD_USER_ALL_SELLERS_ERROR",
+      payload: error.message || "Server connection error",
+    });
+  }
+};
 
-export { loadCurrentUserAction, clearErrorsAction };
+const addSellerAction = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "ADD_SELLER_REQUEST",
+    });
+    const response = await fetch(
+      `http://localhost:8000/auth/api/seller/${id}`,
+      {
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    dispatch({
+      type: "ADD_SELLER_SUCCESS",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "ADD_SELLER_ERROR",
+      payload: error.message || "Server connection error",
+    });
+  }
+};
+const pauseSellerAction = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "PAUSE_SELLER_REQUEST",
+    });
+    const response = await fetch(
+      `http://localhost:8000/auth/pause-seller/${id}`,
+      {
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+    dispatch({
+      type: "PAUSE_SELLER_SUCCESS",
+      payload: data.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "PAUSE_SELLER_ERROR",
+      payload: error.message || "Server connection error",
+    });
+  }
+};
+export {
+  loadCurrentUserAction,
+  clearErrorsAction,
+  loadUserAllSellersAction,
+  addSellerAction,
+  pauseSellerAction,
+};

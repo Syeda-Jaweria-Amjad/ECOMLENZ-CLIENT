@@ -29,7 +29,6 @@ function Dashboard() {
     dispatch(clearErrorsAction());
     dispatch(loadCurrentUserAction());
   }, [dispatch]);
-  console.log(user);
   return (
     <div className="flex h-screen overflow-hidden relative">
       {/* Sidebar */}
