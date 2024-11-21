@@ -5,6 +5,8 @@ import { NavLink } from 'react-router-dom';
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineMail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import EditProfileModal from "./EditProfileModal"
+import ChangePassword from './ChangePassword';
 import {
   handleShowFailureToast,
   handleShowSuccessToast,
@@ -74,19 +76,13 @@ const Settings = () => {
             </div>
             <div className="flex flex-col items-end gap-2 md:gap-1">
               {/* <EditProfileModal /> */}
-              <div
-                className="text-md font-semibold text-gray-700 hover:underline cursor-pointer"
-                
-              >
-                Edit Password
-              </div>
-              {/* change password code her */}
+              <EditProfileModal/>
  
               <div
                 className="text-md font-semibold text-gray-700 hover:underline cursor-pointer"
-                
               >
-                Change Password
+                 {/* change password code her */}
+                <ChangePassword/>
               </div>
               
             </div>
