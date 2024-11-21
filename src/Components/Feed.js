@@ -1,5 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiSearch, FiFilter, FiCheck } from "react-icons/fi";
+import { useSeller } from "./ContextAPIs/SellerProvider";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  clearErrorsAction,
+  loadUserAllSellersAction,
+  markAsReadAllProductsAction,
+} from "../Redux/Actions/loadCurrentUserAction";
+import {
+  handleShowFailureToast,
+  handleShowSuccessToast,
+} from "./ToastMessages/ToastMessage";
+import { Toaster } from "react-hot-toast";
 
 function Feed() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -10,7 +22,7 @@ function Feed() {
   const dropdownItems = ["Categories", "Buy Box", "Offers", "Sales Rank"];
   const totalResults = 40; // Total number of results
   const totalPages = Math.ceil(totalResults / rowsPerPage);
-
+  const { selectedSellerId } = useSeller();
   const products = [
     {
       name: "We Are Young Life is Fun WYLF for Toyota Sienna 7 Passenger 2011-2020 - 3rd Row Set Seat Covers - Solid Gray Faux Leather",
@@ -122,9 +134,35 @@ function Feed() {
     setRowsPerPage(Number(e.target.value));
     setCurrentPage(1); // Reset to first page on rows change
   };
-
+  const dispatch = useDispatch();
+  const {
+    readAllProductsLoading,
+    readAllProductsMessage,
+    readAllProductsError,
+  } = useSelector((state) => state.markAsReadAllProductsReducer);
+  const handleMarkAsRead = () => {
+    if (selectedSellerId) {
+      dispatch(markAsReadAllProductsAction(selectedSellerId));
+    }
+  };
+  useEffect(() => {
+    if (!readAllProductsLoading && readAllProductsMessage) {
+      handleShowSuccessToast(readAllProductsMessage);
+      dispatch(clearErrorsAction());
+      dispatch(loadUserAllSellersAction());
+    } else if (!readAllProductsLoading && readAllProductsError) {
+      handleShowFailureToast(readAllProductsError);
+      dispatch(clearErrorsAction());
+    }
+  }, [
+    readAllProductsLoading,
+    readAllProductsError,
+    readAllProductsMessage,
+    dispatch,
+  ]);
   return (
     <div className="flex flex-col w-full h-full bg-gray-50">
+      <Toaster />
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between py-3 bg-white border-b border-gray-200 px-3">
         <div className="flex items-center space-x-4">
@@ -133,9 +171,14 @@ function Feed() {
             Automotive
           </div>
         </div>
-        <button className="px-4 py-2 bg-gray-100 rounded-md text-gray-600 hover:bg-gray-200">
-          Mark all as read
-        </button>
+        {selectedSellerId && (
+          <button
+            className="px-4 py-2 bg-gray-100 rounded-md text-gray-600 hover:bg-gray-200"
+            onClick={handleMarkAsRead}
+          >
+            Mark all as read
+          </button>
+        )}
       </div>
 
       {/* Search and Filters */}

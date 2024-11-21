@@ -18,6 +18,7 @@ import {
 } from "./ToastMessages/ToastMessage";
 import { Toaster } from "react-hot-toast";
 import Loader from "./Loader";
+import { useSeller } from "./ContextAPIs/SellerProvider";
 function Sellers() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -35,6 +36,7 @@ function Sellers() {
   );
   const { pauseSellerLoading, pauseSellerError, pauseSellerMessage } =
     useSelector((state) => state.pauseSellerReducer);
+  const { setSelectedSellerId } = useSeller();
   // const sellers = [
   //   { name: "Automotive", id: "A22NDRL29NJ355", active: true },
   //   { name: "electronics", id: "A5W198TSQJIXA", active: true },
@@ -120,8 +122,10 @@ function Sellers() {
     }
   }, [pauseSellerMessage, pauseSellerLoading, pauseSellerError, dispatch]);
   const handlePauseSeller = (id) => {
+    dispatch(clearErrorsAction());
     dispatch(pauseSellerAction(id));
   };
+
   return (
     <div
       className="relative flex flex-col w-full h-full bg-gray-50"
@@ -198,7 +202,7 @@ function Sellers() {
                     </div>
                   ) : (
                     <button
-                      className="text-sm w-20 text-white h-8 px-2 rounded-md bg-black hover:bg-gray-800"
+                      className="text-[0.65rem] w-20 text-white h-8 px-2 rounded-md bg-black hover:bg-gray-800"
                       onClick={handleAddSeller}
                     >
                       Add Seller
@@ -262,7 +266,10 @@ function Sellers() {
           {sellers.map((seller, index) => (
             <div
               key={index}
-              onClick={() => setActiveCard(index)}
+              onClick={() => {
+                setActiveCard(index);
+                setSelectedSellerId(seller.sellerId);
+              }}
               className={`relative flex items-center justify-between py-3 px-4 bg-white border rounded-md mt-3 hover:shadow-md ${
                 activeCard === index ? "border-black" : "border-gray-300"
               }`}
@@ -273,6 +280,9 @@ function Sellers() {
               >
                 <CiMenuKebab />
               </button>
+              <h1 className="absolute top-4 right-14 bg-black p-1 w-7 h-7 flex justify-center items-center rounded-full text-white">
+                {seller?.newProductCount}
+              </h1>
               {/* Material-UI Dropdown */}
               <Menu
                 anchorEl={menuAnchorEl}

@@ -94,10 +94,113 @@ const pauseSellerAction = (id) => async (dispatch) => {
     });
   }
 };
+const loadUserSavedSellersAction = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "LOAD_USER_SAVED_SELLERS_REQUEST",
+    });
+    const response = await fetch(
+      "http://localhost:8000/auth/load-user-saved-sellers",
+      {
+        credentials: "include",
+      }
+    );
+    const data = await response.json();
+
+    dispatch({
+      type: "LOAD_USER_SAVED_SELLERS_SUCCESS",
+      payload: data.sellers,
+    });
+  } catch (error) {
+    dispatch({
+      type: "LOAD_USER_SAVED_SELLERS_ERROR",
+      payload: error.message || "Server connection error",
+    });
+  }
+};
+
+const changePasswordAction = (data) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "CHANGE_PASSWORD_REQUEST",
+    });
+    let response = await fetch("http://localhost:8000/auth/change-password", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    response = await response.json();
+    dispatch({
+      type: "CHANGE_PASSWORD_SUCCESS",
+      payload: response.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "CHANGE_PASSWORD_ERROR",
+      payload: error.message || "Server connection error",
+    });
+  }
+};
+
+const editProfileAction = (data) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "EDIT_PROFILE_REQUEST",
+    });
+    let response = await fetch("http://localhost:8000/auth/edit-profile", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    response = await response.json();
+    dispatch({
+      type: "EDIT_PROFILE_SUCCESS",
+      payload: response.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "EDIT_PROFILE_ERROR",
+      payload: error.message || "Server connection error",
+    });
+  }
+};
+const markAsReadAllProductsAction = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "MARK_AS_READ_ALL_PRODUCTS_REQUEST",
+    });
+    let response = await fetch(
+      `http://localhost:8000/auth/mark-as-read-new-products/${id}`,
+      {
+        credentials: "include",
+      }
+    );
+    response = await response.json();
+    dispatch({
+      type: "MARK_AS_READ_ALL_PRODUCTS_SUCCESS",
+      payload: response.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "MARK_AS_READ_ALL_PRODUCTS_ERROR",
+      payload: error.message || "Server connection error",
+    });
+  }
+};
 export {
   loadCurrentUserAction,
   clearErrorsAction,
   loadUserAllSellersAction,
   addSellerAction,
   pauseSellerAction,
+  loadUserSavedSellersAction,
+  changePasswordAction,
+  editProfileAction,
+  markAsReadAllProductsAction,
 };
