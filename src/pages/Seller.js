@@ -72,13 +72,13 @@ const SellerTable = () => {
               <div className="flex justify-center">
                 <Loader />
               </div>
-            ) : userSavedSellers && userSavedSellers.length > 0 ? (
-              userSavedSellers.map((seller, index) => (
+            ) : userSavedSellers && userSavedSellers?.length > 0 ? (
+              userSavedSellers?.map((seller, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-4 py-2 border-b">{seller?.sellerName}</td>
                   <td className="px-4 py-2 border-b">{seller?.sellerId}</td>
                   <td className="px-4 py-2 border-b">
-                    {dateConverter(seller.date)}
+                    {dateConverter(seller?.date)}
                   </td>
                   <td className="px-4 py-2 border-b">
                     <span className="text-green-600 bg-green-100 px-2 py-1 rounded-full text-sm">

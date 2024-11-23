@@ -8,6 +8,7 @@ import {
   loadUserSavedSellersReducer,
   markAsReadAllProductsReducer,
   pauseSellerReducer,
+  saveSellerReducer,
 } from "./Reducers/loadCurrentUserReducer";
 import { clearErrorsAction } from "./Actions/loadCurrentUserAction";
 
@@ -22,6 +23,7 @@ const store = configureStore({
     changePasswordReducer,
     editProfileReducer,
     markAsReadAllProductsReducer,
+    saveSellerReducer,
   },
 });
 

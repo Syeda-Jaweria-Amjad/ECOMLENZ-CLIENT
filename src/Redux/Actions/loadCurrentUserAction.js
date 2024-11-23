@@ -150,8 +150,8 @@ const editProfileAction = (data) => async (dispatch) => {
     dispatch({
       type: "EDIT_PROFILE_REQUEST",
     });
-    let response = await fetch("http://localhost:8000/auth/edit-profile", {
-      method: "POST",
+    let response = await fetch("http://localhost:8000/auth/edit-user", {
+      method: "PUT",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
@@ -193,6 +193,26 @@ const markAsReadAllProductsAction = (id) => async (dispatch) => {
     });
   }
 };
+const saveSellerAction = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: "SAVE_SELLER_REQUEST",
+    });
+    let response = await fetch(`http://localhost:8000/auth/save-seller/${id}`, {
+      credentials: "include",
+    });
+    response = await response.json();
+    dispatch({
+      type: "SAVE_SELLER_SUCCESS",
+      payload: response.message,
+    });
+  } catch (error) {
+    dispatch({
+      type: "SAVE_SELLER_ERROR",
+      payload: error.message || "Server connection error",
+    });
+  }
+};
 export {
   loadCurrentUserAction,
   clearErrorsAction,
@@ -203,4 +223,5 @@ export {
   changePasswordAction,
   editProfileAction,
   markAsReadAllProductsAction,
+  saveSellerAction,
 };

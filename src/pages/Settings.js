@@ -1,16 +1,18 @@
-import React from 'react'
-import Header from '../Components/Header'
+import React, { useEffect } from "react";
+import Header from "../Components/Header";
 import { PiGreaterThanLight } from "react-icons/pi";
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineMail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import EditProfileModal from "./EditProfileModal"
-import ChangePassword from './ChangePassword';
+import EditProfileModal from "./EditProfileModal";
+import ChangePassword from "./ChangePassword";
+import { useDispatch, useSelector } from "react-redux";
 import {
   handleShowFailureToast,
   handleShowSuccessToast,
 } from "../Components/ToastMessages/ToastMessage";
+import { loadCurrentUserAction } from "../Redux/Actions/loadCurrentUserAction";
 const Settings = () => {
   const navigate = useNavigate();
 
@@ -32,63 +34,63 @@ const Settings = () => {
     }
   };
 
-  
+  const dispatch = useDispatch();
+  const { loading, user } = useSelector(
+    (state) => state.loadCurrentUserReducer
+  );
+  useEffect(() => {
+    dispatch(loadCurrentUserAction());
+  }, [dispatch]);
   return (
-    <div className='flex flex-col'>
-      
-    <div>
-      <Header/>
-    </div>
-
-    {/* Breadcrumbs */}
-    <div className='flex flex-row items-center gap-2 p-4'>
-      <NavLink to="/dashboard/products-feed" className="opacity-60">
-        Home
-      </NavLink>
-      <div className=''>
-        <PiGreaterThanLight/>
+    <div className="flex flex-col">
+      <div>
+        <Header />
       </div>
-      <a href="/" className="opacity-60">
-        Settings
-      </a>
-    </div>
 
-    <div className="w-full flex flex-col items-center justify-center">
+      {/* Breadcrumbs */}
+      <div className="flex flex-row items-center gap-2 p-4">
+        <NavLink to="/dashboard/products-feed" className="opacity-60">
+          Home
+        </NavLink>
+        <div className="">
+          <PiGreaterThanLight />
+        </div>
+        <a href="/" className="opacity-60">
+          Settings
+        </a>
+      </div>
+
+      <div className="w-full flex flex-col items-center justify-center">
         {/* profile */}
         <div className="w-full md:w-10/12 lg:w-7/12">
           <div className="my-3 font-semibold text-gray-800">PROFILE</div>
           <div className="flex flex-col md:flex-row gap-6 justify-between border border-gray-500 p-4 rounded-lg">
             <div className="flex flex-col">
-              
               <div className="flex gap-2 mt-1 items-center">
-              <CgProfile size={20}/>
+                <CgProfile size={20} />
                 <div className="text-xl font-medium text-gray-800">
-                  Jaweria Amjad
+                  {!loading && user?.firstName + " " + user?.lastName}
                 </div>
               </div>
               <div className="flex gap-2 mt-1 items-center">
-              <MdOutlineMail size={20} />
+                <MdOutlineMail size={20} />
                 <div className="text-lg font-medium text-gray-700">
-                  j.amjad@gmail.com
+                  {!loading && user?.email}
                 </div>
               </div>
-
             </div>
             <div className="flex flex-col items-end gap-2 md:gap-1">
               {/* <EditProfileModal /> */}
-              <EditProfileModal/>
- 
-              <div
-                className="text-md font-semibold text-gray-700 hover:underline cursor-pointer"
-              >
-                 {/* change password code her */}
-                <ChangePassword/>
+              <EditProfileModal />
+
+              <div className="text-md font-semibold text-gray-700 hover:underline cursor-pointer">
+                {/* change password code her */}
+                <ChangePassword />
               </div>
-              
             </div>
           </div>
         </div>
- 
+
         <div className="mt-5 md:w-10/12 lg:w-8/12 xl:w-7/12 ">
           {/* EMAIL NOTIFICATIONS */}
           <div className="my-3 font-semibold text-gray-800">
@@ -113,7 +115,7 @@ const Settings = () => {
               </label>
             </div>
           </div>
- 
+
           {/* AMAZON MARKETPLACE */}
           <div className="mt-5">
             <div className="my-3 font-semibold text-gray-800">
@@ -129,7 +131,7 @@ const Settings = () => {
               </div>
             </div>
           </div>
- 
+
           {/* Billing and Subscription */}
           <div className="my-5">
             <div className="my-3 font-semibold text-gray-800">
@@ -139,7 +141,7 @@ const Settings = () => {
               <div className="flex gap-2">
                 <div className="text-gray-700">Current plan</div>
                 <div className="border border-gray-400 bg-gray-100 flex gap-1 justify-center items-center text-sm text-black px-1 rounded-md">
-                  <img className="w-4" src={''} alt="" />
+                  <img className="w-4" src={""} alt="" />
                   Active
                 </div>
               </div>
@@ -147,7 +149,7 @@ const Settings = () => {
                 Next billing on November 09th, 2024
               </div>
             </div>
- 
+
             <div className="flex flex-col md:flex-row justify-between border border-gray-500 p-4 rounded-lg">
               <div className="flex justify-start gap-2 items-center">
                 <div className="text-md font-bold text-white py-2 px-3 bg-gray-900 rounded-md border border-gray-200">
@@ -168,7 +170,7 @@ const Settings = () => {
               </div>
             </div>
           </div>
- 
+
           <div
             className=" flex flex-col items-center justify-center my-5 text-md font-medium text-red-900 cursor-pointer"
             onClick={handleLogout}
@@ -177,11 +179,8 @@ const Settings = () => {
           </div>
         </div>
       </div>
-
-     
-    
     </div>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;

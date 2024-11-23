@@ -60,7 +60,7 @@ const LoginPage = () => {
         // navigate("/dashboard/productfeed/feed");
         handleShowSuccessToast(data?.message);
         setTimeout(() => {
-          navigate("/dashboard/products-feed");
+          navigate("/dashboard");
         }, 1000);
       } else {
         handleShowFailureToast(data?.message || "Login failed");

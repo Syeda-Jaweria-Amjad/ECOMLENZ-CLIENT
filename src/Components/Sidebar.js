@@ -3,8 +3,6 @@ import { NavLink } from "react-router-dom";
 import { FiPackage, FiBookmark, FiUsers, FiSettings } from "react-icons/fi";
 import { GoSidebarExpand, GoSidebarCollapse } from "react-icons/go";
 
-import logo from "../assets/logo.svg";
-
 function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -21,13 +19,18 @@ function Sidebar() {
       }`}
     >
       {/* Header */}
-      <div className={`flex items-center justify-between px-6 py-4 border-b border-gray-300 ${
+      <div
+        className={`flex items-center justify-between px-6 py-4 border-b border-gray-300 ${
           isCollapsed ? "justify-center" : ""
         }`}
       >
         {!isCollapsed && (
           <div>
-            <img src={logo} alt="logo" className="w-40" />
+            <img
+              src={require("../assets/ecomlenslogo1.png")}
+              alt="logo"
+              className="w-40"
+            />
           </div>
         )}
         <button

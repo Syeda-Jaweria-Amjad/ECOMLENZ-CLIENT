@@ -11,6 +11,7 @@ import {
   clearErrorsAction,
   loadUserAllSellersAction,
   pauseSellerAction,
+  saveSellerAction,
 } from "../Redux/Actions/loadCurrentUserAction";
 import {
   handleShowFailureToast,
@@ -125,7 +126,41 @@ function Sellers() {
     dispatch(clearErrorsAction());
     dispatch(pauseSellerAction(id));
   };
+  const { saveSellerLoading, saveSellerMessage, saveSellerError } = useSelector(
+    (state) => state.saveSellerReducer
+  );
+  const handleSaveSeller = (id) => {
+    if (id) {
+      dispatch(clearErrorsAction());
+      dispatch(saveSellerAction(id));
+    } else {
+      handleShowFailureToast("Id is missing");
+    }
+  };
 
+  useEffect(() => {
+    if (!saveSellerLoading && saveSellerMessage) {
+      handleShowSuccessToast(saveSellerMessage);
+      dispatch(clearErrorsAction());
+      dispatch(loadUserAllSellersAction());
+    } else if (!saveSellerLoading && saveSellerError) {
+      handleShowFailureToast(saveSellerError);
+      dispatch(clearErrorsAction());
+    }
+  }, [saveSellerLoading, saveSellerError, saveSellerMessage, dispatch]);
+
+  const [isSavedShowing, setSavedShowing] = useState(false);
+  const [filterSellersForBookmarks, setFilterSellersForBookmarks] =
+    useState(sellers);
+  useEffect(() => {
+    if (isSavedShowing) {
+      let temp = sellers.filter((s) => s.isSaved === true);
+      setFilterSellersForBookmarks(temp);
+      return;
+    } else {
+      setFilterSellersForBookmarks(sellers);
+    }
+  }, [setFilterSellersForBookmarks, isSavedShowing, sellers]);
   return (
     <div
       className="relative flex flex-col w-full h-full bg-gray-50"
@@ -257,13 +292,23 @@ function Sellers() {
             </div>
           </div>
           <div>
-            <FaRegBookmark className="text-black text-lg" />
+            {isSavedShowing ? (
+              <FaBookmark
+                className="text-black cursor-pointer"
+                onClick={() => setSavedShowing(false)}
+              />
+            ) : (
+              <FaRegBookmark
+                className="text-gray-500 cursor-pointer"
+                onClick={() => setSavedShowing(true)}
+              />
+            )}
           </div>
         </div>
 
         {/* Sellers List */}
         <div className="flex flex-col flex-grow px-3 py-4 overflow-y-auto max-h-[calc(100vh-150px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 scrollbar-thumb-rounded-md">
-          {sellers.map((seller, index) => (
+          {filterSellersForBookmarks?.map((seller, index) => (
             <div
               key={index}
               onClick={() => {
@@ -321,10 +366,16 @@ function Sellers() {
                     className="cursor-pointer text-lg px-1 py-1 border border-gray-300 rounded-md"
                     onClick={() => toggleBookmark(index)}
                   >
-                    {bookmarked[index] ? (
-                      <FaBookmark className="text-black" />
+                    {seller?.isSaved ? (
+                      <FaBookmark
+                        className="text-black"
+                        onClick={() => handleSaveSeller(seller?._id)}
+                      />
                     ) : (
-                      <FaRegBookmark className="text-gray-500" />
+                      <FaRegBookmark
+                        className="text-gray-500"
+                        onClick={() => handleSaveSeller(seller?._id)}
+                      />
                     )}
                   </span>
                   <div className="shadow px-3 py-1 ml-3 flex justify-center items-center border border-gray-300 rounded-lg">

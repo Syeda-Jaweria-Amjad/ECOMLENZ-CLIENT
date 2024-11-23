@@ -88,7 +88,7 @@ const pauseSellerReducer = createReducer(
         state.pauseSellerLoading = false;
         state.pauseSellerError = action.payload;
       })
-      .addCase("CLEAR_ERRROS", (state) => {
+      .addCase("CLEAR_ERRORS", (state) => {
         state.pauseSellerError = "";
         state.pauseSellerMessage = "";
         state.pauseSellerLoading = false;
@@ -196,6 +196,28 @@ const markAsReadAllProductsReducer = createReducer(
       });
   }
 );
+const saveSellerReducer = createReducer(
+  { saveSellerLoading: false, saveSellerMessage: "", saveSellerError: "" },
+  (builder) => {
+    builder
+      .addCase("SAVE_SELLER_REQUEST", (state) => {
+        state.saveSellerLoading = true;
+      })
+      .addCase("SAVE_SELLER_SUCCESS", (state, action) => {
+        state.saveSellerLoading = false;
+        state.saveSellerMessage = action.payload;
+      })
+      .addCase("SAVE_SELLER_ERROR", (state, action) => {
+        state.saveSellerLoading = false;
+        state.saveSellerError = action.payload;
+      })
+      .addCase("CLEAR_ERRORS", (state) => {
+        state.saveSellerError = "";
+        state.saveSellerMessage = "";
+        state.saveSellerLoading = false;
+      });
+  }
+);
 export {
   loadCurrentUserReducer,
   loadUserAllSellersReducer,
@@ -205,4 +227,5 @@ export {
   changePasswordReducer,
   editProfileReducer,
   markAsReadAllProductsReducer,
+  saveSellerReducer,
 };
