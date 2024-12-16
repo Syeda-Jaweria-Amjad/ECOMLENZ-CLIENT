@@ -13,6 +13,7 @@ import {
   handleShowSuccessToast,
 } from "../Components/ToastMessages/ToastMessage";
 import { loadCurrentUserAction } from "../Redux/Actions/loadCurrentUserAction";
+
 const Settings = () => {
   const navigate = useNavigate();
 
@@ -38,9 +39,30 @@ const Settings = () => {
   const { loading, user } = useSelector(
     (state) => state.loadCurrentUserReducer
   );
+
   useEffect(() => {
     dispatch(loadCurrentUserAction());
   }, [dispatch]);
+
+  function formatDateForBilling() {
+    const date = new Date(user?.subscription?.planEndsAt);
+    const options = { year: "numeric", month: "long", day: "2-digit" };
+    const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+      date
+    );
+
+    const day = date.getDate();
+    const suffix =
+      day === 1 || day === 21 || day === 31
+        ? "st"
+        : day === 2 || day === 22
+        ? "nd"
+        : day === 3 || day === 23
+        ? "rd"
+        : "th";
+
+    return `Next billing on ${formattedDate.replace(/\d{2}/, day + suffix)}`;
+  }
   return (
     <div className="flex flex-col">
       <div>
@@ -48,85 +70,77 @@ const Settings = () => {
       </div>
 
       {/* Breadcrumbs */}
-      <div className="flex flex-row items-center gap-2 p-4">
+      <div className="flex flex-row items-center gap-2 p-4 text-sm sm:text-base">
         <NavLink to="/dashboard/products-feed" className="opacity-60">
           Home
         </NavLink>
-        <div className="">
+        <div>
           <PiGreaterThanLight />
         </div>
-        <a href="/" className="opacity-60">
-          Settings
-        </a>
+        <span className="opacity-60">Settings</span>
       </div>
 
       <div className="w-full flex flex-col items-center justify-center">
-        {/* profile */}
-        <div className="w-full md:w-10/12 lg:w-7/12">
-          <div className="my-3 font-semibold text-gray-800">PROFILE</div>
+        {/* Profile Section */}
+        <div className="w-full sm:w-10/12 lg:w-7/12">
+          <div className="my-3 font-semibold text-gray-800 text-lg">
+            PROFILE
+          </div>
           <div className="flex flex-col md:flex-row gap-6 justify-between border border-gray-500 p-4 rounded-lg">
-            <div className="flex flex-col">
-              <div className="flex gap-2 mt-1 items-center">
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-2 items-center">
                 <CgProfile size={20} />
-                <div className="text-xl font-medium text-gray-800">
+                <div className="text-base sm:text-xl font-medium text-gray-800">
                   {!loading && user?.firstName + " " + user?.lastName}
                 </div>
               </div>
-              <div className="flex gap-2 mt-1 items-center">
+              <div className="flex gap-2 items-center">
                 <MdOutlineMail size={20} />
-                <div className="text-lg font-medium text-gray-700">
+                <div className="text-sm sm:text-lg font-medium text-gray-700">
                   {!loading && user?.email}
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-end gap-2 md:gap-1">
-              {/* <EditProfileModal /> */}
-              <EditProfileModal />
-
-              <div className="text-md font-semibold text-gray-700 hover:underline cursor-pointer">
-                {/* change password code her */}
-                <ChangePassword />
-              </div>
+            <div className="flex flex-col items-end gap-2">
+              <EditProfileModal user={user} />
+              <ChangePassword />
             </div>
           </div>
         </div>
 
-        <div className="mt-5 md:w-10/12 lg:w-8/12 xl:w-7/12 ">
-          {/* EMAIL NOTIFICATIONS */}
-          <div className="my-3 font-semibold text-gray-800">
+        {/* Email Notifications */}
+        <div className="mt-5 w-full sm:w-10/12 lg:w-8/12 xl:w-7/12">
+          <div className="my-3 font-semibold text-gray-800 text-lg">
             EMAIL NOTIFICATIONS
           </div>
-          <div className="flex flex-col md:flex-row md:gap-20 lg:gap-36 justify-between border border-gray-500 p-4 rounded-lg">
-            <div className="flex flex-col">
-              <div className="text-xl font-bold text-gray-800">
+          <div className="flex flex-col md:flex-row justify-between border border-gray-500 p-4 rounded-lg gap-4">
+            <div>
+              <div className="text-sm sm:text-xl font-bold text-gray-800">
                 Email Notifications
               </div>
-              <div className="mt-1">
-                <div className="text-md font-medium text-gray-700">
-                  Stay updated with important notifications sent directly to
-                  your email inbox.
-                </div>
+              <div className="mt-1 text-xs sm:text-md font-medium text-gray-700">
+                Stay updated with important notifications sent directly to your
+                email inbox.
               </div>
             </div>
-            <div className="flex items-center mt-4 md:mt-0">
+            <div className="flex items-center">
               <label className="inline-flex items-center cursor-pointer">
-                <input type="checkbox" defaultValue className="sr-only peer" />
-                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:bg-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gray-600" />
+                <input type="checkbox" className="sr-only peer" defaultValue />
+                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:bg-gray-600"></div>
               </label>
             </div>
           </div>
 
-          {/* AMAZON MARKETPLACE */}
+          {/* Amazon Marketplace */}
           <div className="mt-5">
-            <div className="my-3 font-semibold text-gray-800">
+            <div className="my-3 font-semibold text-gray-800 text-lg">
               AMAZON MARKETPLACE
             </div>
-            <div className="flex flex-col md:flex-row gap-5 lg:gap-60 justify-between border border-gray-500 p-4 rounded-lg">
-              <div className="py-2 px-2 bg-gray-100 flex gap-1 rounded-md border border-gray-200">
-                <span className="text-xs flex items-center">US</span>
-                <div>United States</div>
+            <div className="flex flex-col md:flex-row justify-between gap-4 border border-gray-500 p-4 rounded-lg">
+              <div className="py-2 px-3 bg-gray-100 rounded-md border border-gray-200 text-sm">
+                United States
               </div>
-              <div className="py-2 px-3 bg-gray-100 flex gap-1 rounded-md border border-gray-200">
+              <div className="py-2 px-3 bg-gray-100 rounded-md border border-gray-200 text-sm">
                 Edit
               </div>
             </div>
@@ -134,45 +148,47 @@ const Settings = () => {
 
           {/* Billing and Subscription */}
           <div className="my-5">
-            <div className="my-3 font-semibold text-gray-800">
+            <div className="my-3 font-semibold text-gray-800 text-lg">
               Billing and Subscription
             </div>
-            <div className="flex flex-col md:flex-row justify-between my-2">
+            <div className="flex flex-col md:flex-row justify-between my-2 gap-2">
               <div className="flex gap-2">
-                <div className="text-gray-700">Current plan</div>
-                <div className="border border-gray-400 bg-gray-100 flex gap-1 justify-center items-center text-sm text-black px-1 rounded-md">
-                  <img className="w-4" src={""} alt="" />
+                <div className="text-sm text-gray-700">Current plan</div>
+                <div className="border bg-gray-100 flex items-center text-sm px-1 rounded-md">
                   Active
                 </div>
               </div>
-              <div className="text-sm mt-2 md:mt-0">
-                Next billing on November 09th, 2024
+              <div className="text-xs sm:text-sm text-gray-700">
+                {formatDateForBilling()}
               </div>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between border border-gray-500 p-4 rounded-lg">
-              <div className="flex justify-start gap-2 items-center">
-                <div className="text-md font-bold text-white py-2 px-3 bg-gray-900 rounded-md border border-gray-200">
-                  ULTRA
+            <div className="flex flex-col md:flex-row justify-between border border-gray-500 p-4 rounded-lg gap-4">
+              <div className="flex flex-col md:flex-row gap-2 items-center w-full md:w-auto">
+                <div className="text-sm text-center font-bold bg-gray-900 text-white px-3 py-2 rounded-md w-full md:w-auto">
+                  {user && user?.subscription?.planType}
                 </div>
-                <div>200 sellers/month</div>
+                <div className="text-sm text-center w-full md:w-auto">
+                  {user && user?.subscription?.sellers + " sellers / month"}
+                </div>
               </div>
-              <div className="flex justify-between gap-2 mt-4 md:mt-0">
-                <div className="flex items-center text-black text-lg font-bold mx-3">
-                  $230.00/m
+              <div className="flex flex-col md:flex-row gap-2 items-center w-full md:w-auto">
+                <div className="text-sm text-center font-bold w-full md:w-auto">
+                  ${user && user?.subscription?.amount + ".00/m"}
                 </div>
-                <div className="py-2 px-3 bg-gray-100 flex gap-1 rounded-md border border-gray-200">
+                <button className="py-2 px-3 bg-gray-100 border border-gray-200 rounded-md mb-2 md:mb-0 w-full md:w-auto">
                   Edit billing
-                </div>
-                <div className="py-2 px-3 text-white bg-gray-900 flex gap-1 rounded-md border border-gray-200">
+                </button>
+                <button className="py-2 px-3 bg-gray-900 text-white rounded-md w-full md:w-auto">
                   Upgrade
-                </div>
+                </button>
               </div>
             </div>
           </div>
 
+          {/* Logout */}
           <div
-            className=" flex flex-col items-center justify-center my-5 text-md font-medium text-red-900 cursor-pointer"
+            className="flex items-center justify-center my-5 text-sm sm:text-md font-medium text-red-900 cursor-pointer"
             onClick={handleLogout}
           >
             Logout

@@ -24,16 +24,17 @@ const editProfileValidationSchema = Yup.object().shape({
     .max(50, "Last name should not exceed 50 characters")
     .required("Last name is required"),
 });
-const EditProfileModal = () => {
+const EditProfileModal = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const { editProfileLoading, editProfileMessage, editProfileError } =
     useSelector((state) => state.editProfileReducer);
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
     },
+    enableReinitialize: true,
     validationSchema: editProfileValidationSchema,
     onSubmit: (values) => {
       dispatch(editProfileAction(values));
@@ -54,7 +55,6 @@ const EditProfileModal = () => {
       dispatch(clearErrorsAction());
     }
   }, [editProfileLoading, editProfileError, editProfileMessage, dispatch]);
-
   return (
     <div>
       <Toaster />

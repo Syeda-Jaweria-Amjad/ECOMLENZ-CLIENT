@@ -6,7 +6,7 @@ import Productsfeed from "./pages/Productsfeed";
 import SellerTable from "./pages/Seller";
 import Saveproducts from "./pages/Saveproducts";
 import Settings from "./pages/Settings";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   clearErrorsAction,
   loadCurrentUserAction,
@@ -15,9 +15,7 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const dispatch = useDispatch();
-  const { loading, error, user } = useSelector(
-    (state) => state.loadCurrentUserReducer
-  );
+
   useEffect(() => {
     // Trigger loading state on route change
     setIsLoading(true);

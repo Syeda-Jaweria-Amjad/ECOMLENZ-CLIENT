@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "../../pages/bgstyle.css";
 import {
   handleShowFailureToast,
@@ -72,48 +72,50 @@ const ResetPassword = () => {
       <Toaster />
       <div className="flex items-center justify-center h-screen w-full">
         <div className="">
-          <div className="block max-w-2xl p-6 bg-stale-50 border border-gray-200 rounded-lg shadow hover:shadow-lg dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Reset Password
-            </h5>
-            <h6 className="my-5 text-gray-600">
-              Enter your new password below.
-            </h6>
+          <div className="flex items-center justify-center h-screen w-screen bg-gray-100">
+            <div className="w-1/2 p-10 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg">
+              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                Reset Password
+              </h5>
+              <h6 className="my-5 text-gray-600">
+                Enter your new password below.
+              </h6>
 
-            <form className="mt-5" onSubmit={handleResetPassword}>
-              <div className="mb-6">
-                <label
-                  htmlFor="newPassword"
-                  className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
-                >
-                  New Password
-                </label>
-                <input
-                  type="password"
-                  id="newPassword"
-                  name="password"
-                  value={password}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Enter new password"
-                  required
-                />
-              </div>
+              <form className="mt-5" onSubmit={handleResetPassword}>
+                <div className="mb-6">
+                  <label
+                    htmlFor="newPassword"
+                    className="block mb-2 text-md font-medium text-gray-900 dark:text-white"
+                  >
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="Enter new password"
+                    required
+                  />
+                </div>
 
-              {errorMessage && <p className="text-red-500">{errorMessage}</p>}
-              {successMessage && (
-                <p className="text-green-500">{successMessage}</p>
-              )}
+                {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                {successMessage && (
+                  <p className="text-green-500">{successMessage}</p>
+                )}
 
-              <div className="flex gap-2 flex-col">
-                <button
-                  type="submit"
-                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Reset Password
-                </button>
-              </div>
-            </form>
+                <div className="flex gap-2 flex-col">
+                  <button
+                    type="submit"
+                    className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    Reset Password
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

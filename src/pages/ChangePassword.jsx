@@ -35,7 +35,6 @@ const ChangePassword = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const handleSaveChanges = () => {};
   const dispatch = useDispatch();
   const { changePasswordLoading, changePasswordMessage, changePasswordError } =
     useSelector((state) => state.changePasswordReducer);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from 'jwt-decode';
 import { Toaster } from "react-hot-toast";
 import logo from "../../Components/Images/ecomlenslogo1.png";
 import avatar1 from "../../Components/Images/manavatar.jpg";
@@ -60,6 +61,61 @@ const SignUp = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  const handleSuccess = async (response) => {
+    const { credential } = response;
+    if (credential) {
+      try {
+        // Decode the JWT token from Google
+        const decoded = jwtDecode(credential);
+        console.log('Decoded JWT:', decoded);
+
+        // Extract relevant user data
+        const user = {
+          email: decoded.email,
+          firstName: decoded.given_name,
+          lastName: decoded.family_name,
+        };
+
+        // Send the token to your backend to create or find the user
+        const response = await fetch('https://ecomlenz-erafh6dqcbhac9fz.canadacentral-01.azurewebsites.net/auth/google-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: "include",
+          body: JSON.stringify({ token: credential }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          // Save the JWT token and user details to localStorage
+          localStorage.setItem('user', JSON.stringify(data));
+        } else {
+         console.log("signup failed")
+        }
+
+        if(response.ok)
+        {
+          handleShowSuccessToast("Signup Successfully");
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 1000);
+         
+        }
+        else{
+          handleShowFailureToast(error?.message);
+        }
+      } catch (error) {
+        console.error("Error occur during signup with google",error);
+      }
+    }
+  };
+
+  function handleFailure(error)
+  {
+    console.error('Google login failed:', error);
+  }
+
   const registerUser = async (values) => {
     setLoading(true); // Show loader
 
@@ -90,8 +146,8 @@ const SignUp = () => {
 
     try {
       const result = await fetch(
-        // "https://ecomlenz-erafh6dqcbhac9fz.canadacentral-01.azurewebsites.net/auth/signup",
-        "http://localhost:8000/auth/signup",
+        "https://ecomlenz-erafh6dqcbhac9fz.canadacentral-01.azurewebsites.net/auth/signup",
+        // "http://localhost:8000/auth/signup",
         {
           method: "POST",
           headers: {
@@ -421,6 +477,10 @@ const SignUp = () => {
               >
                 {loading ? "Loading..." : "Create an account"}
               </button>
+
+              <div className="flex items-center justify-center mt-6">
+            <GoogleLogin onSuccess={handleSuccess} onError={handleFailure} />
+            </div>
 
               <div className="flex justify-between mt-4">
                 <p className="text-md text-gray-600 dark:text-gray-400">

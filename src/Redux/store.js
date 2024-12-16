@@ -9,6 +9,11 @@ import {
   markAsReadAllProductsReducer,
   pauseSellerReducer,
   saveSellerReducer,
+  editSellerReducer,
+  deleteSellerReducer,
+  SellerProductReducer,
+  loadSellerProductsReducer,
+  showSavedProductReducer, SaveSallerProductReducer
 } from "./Reducers/loadCurrentUserReducer";
 import { clearErrorsAction } from "./Actions/loadCurrentUserAction";
 
@@ -24,6 +29,11 @@ const store = configureStore({
     editProfileReducer,
     markAsReadAllProductsReducer,
     saveSellerReducer,
+    editSeller: editSellerReducer,
+    deleteSellerReducer,
+    sellerProducts: SellerProductReducer,
+    loadSellerProductsReducer,
+    showSavedProductReducer, SaveSallerProductReducer
   },
 });
 

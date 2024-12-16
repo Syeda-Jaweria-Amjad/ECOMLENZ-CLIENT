@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiPlus, FiSearch, FiFilter, FiChevronDown } from "react-icons/fi";
+import { FiPlus, FiSearch, FiChevronDown } from "react-icons/fi";
 import { FaBookmark, FaRegBookmark, FaRegSquare } from "react-icons/fa";
 import { CiMenuKebab } from "react-icons/ci";
 import Menu from "@mui/material/Menu";
@@ -152,6 +152,7 @@ function SellersModal({ isOpen, onClose, sellers }) {
                   </span>
                   <div className="shadow px-3 py-1 ml-3 flex justify-center items-center border border-gray-300 rounded-lg">
                     <span>
+
                       <FaRegSquare className="text-xs rounded-md bg-[rgb(247,254,231)]" />
                     </span>
                     <span className="text-sm text-gray-700 ml-2">Active</span>

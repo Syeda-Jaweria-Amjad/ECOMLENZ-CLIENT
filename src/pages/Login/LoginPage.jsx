@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../../pages/bgstyle.css";
 import { Toaster } from "react-hot-toast";
 import logo from "../../Components/Images/ecomlenslogo1.png";
@@ -24,19 +27,77 @@ const LoginPage = () => {
   // const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false); // Loader state
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // for navigation
+  const [error, setError] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const handlePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const handleSuccess = async (response) => {
+    const { credential } = response;
+    if (credential) {
+      try {
+        // Decode the JWT token from Google
+        const decoded = jwtDecode(credential);
+        console.log('Decoded JWT:', decoded);
+
+        // Extract relevant user data
+        const user = {
+          email: decoded.email,
+          firstName: decoded.given_name,
+          lastName: decoded.family_name,
+        };
+
+        // Send the token to your backend to create or find the user
+        const response = await fetch('https://ecomlenz-erafh6dqcbhac9fz.canadacentral-01.azurewebsites.net/auth/google-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: "include",
+          body: JSON.stringify({ token: credential }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          // Save the JWT token and user details to localStorage
+          localStorage.setItem('user', JSON.stringify(data));
+        } else {
+          setErrorMessage(data.message || 'Login failed');
+        }
+
+        if(response.ok)
+        {
+          handleShowSuccessToast(data?.message);
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 1000);
+         
+        }
+        else{
+          handleShowFailureToast(error?.message);
+        }
+      } catch (error) {
+        setErrorMessage('An error occurred during login');
+        console.error(error);
+      }
+    }
+  };
+
+  function handleFailure(error)
+  {
+    console.error('Google login failed:', error);
+  }
+
   const handleLogin = async (values) => {
     setLoading(true);
 
     try {
       const response = await fetch(
-        // "https://ecomlenz-erafh6dqcbhac9fz.canadacentral-01.azurewebsites.net/auth/login",
-        "http://localhost:8000/auth/login",
+        "https://ecomlenz-erafh6dqcbhac9fz.canadacentral-01.azurewebsites.net/auth/login",
+        // "http://localhost:8000/auth/login",
         {
           method: "POST",
           headers: {
@@ -51,7 +112,6 @@ const LoginPage = () => {
       );
 
       const data = await response.json();
-      console.log(data?.message);
 
       // Save user data to localStorage
       localStorage.setItem("user", JSON.stringify(data));
@@ -60,7 +120,7 @@ const LoginPage = () => {
         // navigate("/dashboard/productfeed/feed");
         handleShowSuccessToast(data?.message);
         setTimeout(() => {
-          navigate("/dashboard");
+          window.location.href = "/dashboard/products-feed";
         }, 1000);
       } else {
         handleShowFailureToast(data?.message || "Login failed");
@@ -259,6 +319,10 @@ const LoginPage = () => {
                 "Login"
               )}
             </button>
+            
+            <div className="flex items-center justify-center mt-6">
+            <GoogleLogin onSuccess={handleSuccess} onError={handleFailure} />
+            </div>
 
             <div className=" mt-4">
               <p className="text-md text-gray-600 dark:text-gray-400">

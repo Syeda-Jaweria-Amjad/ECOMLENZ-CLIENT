@@ -218,6 +218,178 @@ const saveSellerReducer = createReducer(
       });
   }
 );
+
+const editSellerReducer = createReducer(
+  {
+    editSellerLoading: false,
+    editSellerMessage: null,
+    editSellerError: null,
+  },
+  (builder) => {
+    builder
+      .addCase("EDIT_SELLER_REQUEST", (state) => {
+        state.editSellerLoading = true;
+        state.editSellerMessage = null;
+        state.editSellerError = null;
+      })
+      .addCase("EDIT_SELLER_SUCCESS", (state, action) => {
+        state.editSellerLoading = false;
+        state.editSellerMessage = action.payload;
+      })
+      .addCase("EDIT_SELLER_ERROR", (state, action) => {
+        state.editSellerLoading = false;
+        state.editSellerError = action.payload;
+      })
+      .addCase("CLEAR_ERRORS", (state) => {
+        state.editSellerMessage = null;
+        state.editSellerError = null;
+      });
+  }
+);
+
+const deleteSellerReducer = createReducer(
+  {
+    deleteSellerLoading: false,
+    deleteSellerMessage: null,
+    deleteSellerError: null,
+  },
+  (builder) => {
+    builder
+      .addCase("DELETE_SELLER_REQUEST", (state) => {
+        state.deleteSellerLoading = true;
+        state.deleteSellerMessage = null;
+        state.deleteSellerError = null;
+      })
+      .addCase("DELETE_SELLER_SUCCESS", (state, action) => {
+        state.deleteSellerLoading = false;
+        state.deleteSellerMessage = action.payload;
+      })
+      .addCase("DELETE_SELLER_ERROR", (state, action) => {
+        state.deleteSellerLoading = false;
+        state.deleteSellerError = action.payload;
+      })
+      .addCase("CLEAR_ERRORS", (state) => {
+        state.deleteSellerMessage = null;
+        state.deleteSellerError = null;
+      });
+  }
+);
+
+const SellerProductReducer = createReducer(
+  {
+    SellerProductLoading: false,
+    SellerProductMessage: null,
+    SellerProductError: null,
+  },
+  (builder) => {
+    builder
+      .addCase("SELLER_PRODUCT_REQUEST", (state) => {
+        state.SellerProductLoading = true;
+        state.SellerProductMessage = null;
+        state.SellerProductError = null;
+      })
+      .addCase("SELLER_PRODUCT_SUCCESS", (state, action) => {
+        state.SellerProductLoading = false;
+        state.SellerProductMessage = action.payload;
+      })
+      .addCase("SELLER_PRODUCT_ERROR", (state, action) => {
+        state.SellerProductLoading = false;
+        state.SellerProductError = action.payload;
+      })
+      .addCase("CLEAR_ERRORS", (state) => {
+        state.SellerProductMessage = null;
+        state.SellerProductError = null;
+      });
+  }
+);
+
+// Today's Imran Work 25 Nov 2024
+const loadSellerProductsReducer = createReducer(
+  {
+    loadSellerProductsLoading: false,
+    loadSellerProducts: null,
+    loadSellerProductsError: "",
+  },
+  (builder) => {
+    builder
+      .addCase("LOAD_SELLER_PRODUCTS_REQUEST", (state) => {
+        state.loadSellerProductsLoading = true;
+        state.loadSellerProducts = null;
+        state.loadSellerProductsError = "";
+      })
+      .addCase("LOAD_SELLER_PRODUCTS_SUCCESS", (state, action) => {
+        state.loadSellerProductsLoading = false;
+        state.loadSellerProducts = action.payload;
+      })
+      .addCase("LOAD_SELLER_PRODUCTS_ERROR", (state, action) => {
+        state.loadSellerProductsLoading = false;
+        state.loadSellerProductsError = action.payload;
+      })
+      .addCase("CLEAR_ERRORS", (state) => {
+        state.loadSellerProductsError = "";
+        state.loadSellerProductsLoading = false;
+      });
+  }
+);
+
+const showSavedProductReducer = createReducer(
+  {
+    showSavedProductLoading: false,
+    showSavedProductMessage: null,
+    showSavedProductError: null,
+  },
+  (builder) => {
+    builder
+      .addCase("SHOW_SAVED_PRODUCT_REQUEST", (state) => {
+        state.showSavedProductLoading = true;
+        state.showSavedProductMessage = null;
+        state.showSavedProductError = null;
+      })
+      .addCase("SHOW_SAVED_PRODUCT_SUCCESS", (state, action) => {
+        state.showSavedProductLoading = false;
+        state.showSavedProductMessage = action.payload;
+        
+      })
+      .addCase("SHOW_SAVED_PRODUCT_ERROR", (state, action) => {
+        state.showSavedProductLoading = false;
+        state.showSavedProductError = action.payload;
+      })
+      .addCase("CLEAR_ERRORS", (state) => {
+        state.showSavedProductMessage = null;
+        state.showSavedProductError = null;
+      });
+  }
+);
+
+const SaveSallerProductReducer = createReducer(
+  {
+    saveSellerProductLoading: false,
+    saveSellerProductMessage: null,
+    saveSellerProductError: null,
+  },
+  (builder) => {
+    builder
+      .addCase("SAVE_SELLER_PRODUCT_REQUEST", (state) => {
+        state.saveSellerProductLoading = true;
+        state.saveSellerProductMessage = null;
+        state.saveSellerProductError = null;
+      })
+      .addCase("SAVE_SELLER_PRODUCT_SUCCESS", (state, action) => {
+        state.saveSellerProductLoading = false;
+        state.saveSellerProductMessage = action.payload;
+        
+      })
+      .addCase("SAVE_SELLER_PRODUCT_ERROR", (state, action) => {
+        state.saveSellerProductLoading = false;
+        state.saveSellerProductError = action.payload;
+      })
+      .addCase("CLEAR_ERRORS", (state) => {
+        state.saveSellerProductMessage = null;
+        state.saveSellerProductError = null;
+      });
+  }
+);
+
 export {
   loadCurrentUserReducer,
   loadUserAllSellersReducer,
@@ -228,4 +400,9 @@ export {
   editProfileReducer,
   markAsReadAllProductsReducer,
   saveSellerReducer,
+  editSellerReducer,
+  deleteSellerReducer,
+  SellerProductReducer,
+  loadSellerProductsReducer,
+  showSavedProductReducer, SaveSallerProductReducer
 };

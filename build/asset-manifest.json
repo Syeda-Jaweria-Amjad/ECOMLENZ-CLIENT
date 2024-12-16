@@ -1,0 +1,35 @@
+{
+  "files": {
+    "main.css": "/static/css/main.3b3a9e59.css",
+    "main.js": "/static/js/main.cc1cdae5.js",
+    "static/js/453.68d2f560.chunk.js": "/static/js/453.68d2f560.chunk.js",
+    "static/media/boyavatar.jpg": "/static/media/boyavatar.c6440c83152a222ad84d.jpg",
+    "static/media/girlavatar.jpg": "/static/media/girlavatar.d98dcb8bc3cf5820d5cf.jpg",
+    "static/media/manavatar.jpg": "/static/media/manavatar.03b589d9b9807c3b315d.jpg",
+    "static/media/pic1.svg": "/static/media/pic1.6eb868f396823e36144838d2d0b60916.svg",
+    "static/media/pic5.svg": "/static/media/pic5.220ae963d25a2b6070fa74e6c13e94c1.svg",
+    "static/media/pic2.svg": "/static/media/pic2.0f5073fa30ffb78012501d72afa7a609.svg",
+    "static/media/howitworks2.svg": "/static/media/howitworks2.0715485518d241d41e58099ca414949e.svg",
+    "static/media/pic4.svg": "/static/media/pic4.d095322d389801615252588ee937cea5.svg",
+    "static/media/howitworks1.svg": "/static/media/howitworks1.d175c1cb6c12569a2e7f9b791bd3f698.svg",
+    "static/media/howitworks3.svg": "/static/media/howitworks3.18976f924aed471f1ae04d22c9db6c30.svg",
+    "static/media/pic3.svg": "/static/media/pic3.b146f41da4ca506537ce9cb69f7a100f.svg",
+    "static/media/sendEmailAvatar.jpg": "/static/media/sendEmailAvatar.0d5742d00e0be0a7c4ee.jpg",
+    "static/media/Pattren.png": "/static/media/Pattren.c39abc2e31648c926fee.png",
+    "static/media/verify-email-tick.png": "/static/media/verify-email-tick.837d8d85dea4f73d4273.png",
+    "static/media/group.png": "/static/media/group.c382724b45e6dbe267f1.png",
+    "static/media/logo.png": "/static/media/logo.59a1a9d632fd3c2791ee.png",
+    "static/media/xJ7GMeKQLgx4bFMTap0hIFb8E.svg": "/static/media/xJ7GMeKQLgx4bFMTap0hIFb8E.773d3e0c6301e1bb671c924fe269375c.svg",
+    "static/media/curve-arrow.svg": "/static/media/curve-arrow.7d101ec2d02a1d027c7fe2ed72a60519.svg",
+    "index.html": "/index.html",
+    "static/media/hIm2RsclTwpgvIqW6Mr3zi5yevw.svg": "/static/media/hIm2RsclTwpgvIqW6Mr3zi5yevw.deb08d27de9af2b168bec048ffbd5442.svg",
+    "static/media/PAHeoepTCetDTW0prXRElehVlY.svg": "/static/media/PAHeoepTCetDTW0prXRElehVlY.5f2da40608062cf1529543d0bd777d26.svg",
+    "main.3b3a9e59.css.map": "/static/css/main.3b3a9e59.css.map",
+    "main.cc1cdae5.js.map": "/static/js/main.cc1cdae5.js.map",
+    "453.68d2f560.chunk.js.map": "/static/js/453.68d2f560.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3b3a9e59.css",
+    "static/js/main.cc1cdae5.js"
+  ]
+}

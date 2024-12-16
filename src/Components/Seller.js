@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FiPlus, FiSearch, FiFilter, FiChevronDown } from "react-icons/fi";
 import { FaRegBookmark, FaBookmark, FaRegSquare } from "react-icons/fa";
-import { CiMenuKebab } from "react-icons/ci";
 import SellersModal from "./Sellermodal";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import { useSelector, useDispatch } from "react-redux";
 import {
   addSellerAction,
@@ -20,6 +17,8 @@ import {
 import { Toaster } from "react-hot-toast";
 import Loader from "./Loader";
 import { useSeller } from "./ContextAPIs/SellerProvider";
+import ActionBtn from "./ActionBtn/ActionBtn";
+
 function Sellers() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
@@ -27,8 +26,6 @@ function Sellers() {
 
   const [bookmarked, setBookmarked] = useState({});
   const [activeCard, setActiveCard] = useState(null);
-  const [menuAnchorEl, setMenuAnchorEl] = useState(null); // For Material-UI dropdown
-  const [menuDropdown, setMenuDropdown] = useState(null); // Track active menu dropdown index
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
   const { sellers } = useSelector((state) => state.loadUserAllSellersReducer);
@@ -37,53 +34,14 @@ function Sellers() {
   );
   const { pauseSellerLoading, pauseSellerError, pauseSellerMessage } =
     useSelector((state) => state.pauseSellerReducer);
-  const { setSelectedSellerId } = useSeller();
-  // const sellers = [
-  //   { name: "Automotive", id: "A22NDRL29NJ355", active: true },
-  //   { name: "electronics", id: "A5W198TSQJIXA", active: true },
-  //   { name: "Jalomane LLC", id: "A3UC9NK1EXG1OP", active: true },
-  //   { name: "Equity With Vision", id: "AKGBUC00BLMHW", active: true },
-  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-  //   { name: "Northcoast Renaissance", id: "A3FWN2PWW18RS", active: true },
-  // ];
+  const { setSelectedSellerId, setSelectedSellerName } = useSeller();
+  const [searchValue, setSearchValue] = useState(null);
 
   const toggleBookmark = (index) => {
     setBookmarked((prev) => ({
       ...prev,
       [index]: !prev[index],
     }));
-  };
-
-  const toggleMenuDropdown = (index) => {
-    setMenuDropdown((prevIndex) => (prevIndex === index ? null : index)); // Open or close the clicked menu
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setMenuDropdown(null); // Close the menu dropdown
-        setSortDropdownOpen(false); // Close sort dropdown as well
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleMenuOpen = (event, index) => {
-    setActiveCard(index);
-    setMenuAnchorEl(event.currentTarget); // Set anchor element for dropdown
-  };
-
-  const handleMenuClose = () => {
-    setMenuAnchorEl(null); // Close the dropdown
   };
 
   useEffect(() => {
@@ -122,6 +80,7 @@ function Sellers() {
       dispatch(clearErrorsAction());
     }
   }, [pauseSellerMessage, pauseSellerLoading, pauseSellerError, dispatch]);
+
   const handlePauseSeller = (id) => {
     dispatch(clearErrorsAction());
     dispatch(pauseSellerAction(id));
@@ -161,6 +120,62 @@ function Sellers() {
       setFilterSellersForBookmarks(sellers);
     }
   }, [setFilterSellersForBookmarks, isSavedShowing, sellers]);
+
+  useEffect(() => {}, [searchValue]);
+  const filteredSellers = searchValue
+    ? filterSellersForBookmarks.filter(
+        (seller) =>
+          seller.sellerName.toLowerCase().includes(searchValue.toLowerCase()) ||
+          seller.sellerId.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    : filterSellersForBookmarks;
+  const [sorting, setSorting] = useState("");
+  useEffect(() => {
+    const sortSellers = (sellers, sortingOrder) => {
+      switch (sortingOrder) {
+        case "ascending":
+          return [...sellers].sort((a, b) =>
+            a.sellerName.localeCompare(b.sellerName)
+          );
+
+        case "descending":
+          return [...sellers].sort((a, b) =>
+            b.sellerName.localeCompare(a.sellerName)
+          );
+
+        case "paused":
+          return [...sellers].sort((a, b) => {
+            const aStatus = a?.pauseStatus?.status ? 1 : 0;
+            const bStatus = b?.pauseStatus?.status ? 1 : 0;
+            return bStatus - aStatus; // Paused sellers first
+          });
+
+        case "active":
+          return [...sellers].sort((a, b) => {
+            const aStatus = a?.pauseStatus?.status ? 1 : 0;
+            const bStatus = b?.pauseStatus?.status ? 1 : 0;
+            return aStatus - bStatus; // Active sellers first
+          });
+
+        case "bookmarked":
+          return [...sellers].sort((a, b) => {
+            const aSaved = a?.isSaved ? 1 : 0;
+            const bSaved = b?.isSaved ? 1 : 0;
+            return bSaved - aSaved; // Bookmarked sellers first
+          });
+
+        default:
+          return sellers;
+      }
+    };
+
+    setFilterSellersForBookmarks(
+      sortSellers(filterSellersForBookmarks, sorting)
+    );
+  }, [sorting, filterSellersForBookmarks]);
+  function handlefeedname() {
+    setSelectedSellerName("");
+  }
   return (
     <div
       className="relative flex flex-col w-full h-full bg-gray-50"
@@ -255,6 +270,7 @@ function Sellers() {
               type="text"
               placeholder="Search"
               className="w-full h-10 border-none outline-none px-2 text-sm"
+              onChange={(e) => setSearchValue(e.target.value)}
             />
           </div>
 
@@ -268,11 +284,35 @@ function Sellers() {
             {sortDropdownOpen && (
               <div className="absolute mt-2 w-40 bg-white border border-gray-300 rounded-md shadow-lg z-10">
                 <div className="py-2">
-                  <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Name
-                  </button>
-                  <button className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                  <button
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setSorting("active")}
+                  >
                     Active
+                  </button>
+                  <button
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setSorting("paused")}
+                  >
+                    Paused
+                  </button>
+                  <button
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setSorting("bookmarked")}
+                  >
+                    Bookmarked
+                  </button>
+                  <button
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setSorting("ascending")}
+                  >
+                    Ascending
+                  </button>
+                  <button
+                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onClick={() => setSorting("descending")}
+                  >
+                    Descending
                   </button>
                 </div>
               </div>
@@ -282,8 +322,11 @@ function Sellers() {
 
         {/* All Sellers Section */}
 
-        <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200">
-          <div className="flex items-center space-x-2">
+        <div
+          className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 cursor-pointer"
+          onClick={() => setSelectedSellerId(null)}
+        >
+          <div className="flex items-center space-x-2" onClick={handlefeedname}>
             <div className="text-lg font-semibold text-gray-800">
               All Sellers
             </div>
@@ -308,90 +351,77 @@ function Sellers() {
 
         {/* Sellers List */}
         <div className="flex flex-col flex-grow px-3 py-4 overflow-y-auto max-h-[calc(100vh-150px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 scrollbar-thumb-rounded-md">
-          {filterSellersForBookmarks?.map((seller, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setActiveCard(index);
-                setSelectedSellerId(seller.sellerId);
-              }}
-              className={`relative flex items-center justify-between py-3 px-4 bg-white border rounded-md mt-3 hover:shadow-md ${
-                activeCard === index ? "border-black" : "border-gray-300"
-              }`}
-            >
-              <button
-                onClick={(e) => handleMenuOpen(e, index)}
-                className="absolute top-4 right-4 rounded-md px-1 py-1 border border-gray-200"
-              >
-                <CiMenuKebab />
-              </button>
-              <h1 className="absolute top-4 right-14 bg-black p-1 w-7 h-7 flex justify-center items-center rounded-full text-white">
-                {seller?.newProductCount}
-              </h1>
-              {/* Material-UI Dropdown */}
-              <Menu
-                anchorEl={menuAnchorEl}
-                open={Boolean(menuAnchorEl) && activeCard === index}
-                onClose={handleMenuClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
+          {filteredSellers.length > 0 ? (
+            filteredSellers.map((seller, index) => (
+              <div
+                key={index}
+                onClick={() => {
+                  setActiveCard(index);
+                  setSelectedSellerId(seller._id);
+                  setSelectedSellerName(seller.sellerName);
                 }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
+                className={`relative flex items-center justify-between py-3 px-4 bg-white border rounded-md mt-3 hover:shadow-md cursor-pointer ${
+                  activeCard === index ? "border-black" : "border-gray-300"
+                }`}
               >
-                <MenuItem
-                  onClick={() => {
-                    handleMenuClose();
-                    handlePauseSeller(seller?.sellerId);
-                  }}
-                >
-                  {seller.pauseStatus.status
-                    ? "Resume Seller"
-                    : "Pause Seller "}
-                </MenuItem>
-                <MenuItem onClick={handleMenuClose}>About</MenuItem>
-              </Menu>
+                <button className="absolute top-4 right-1 rounded-md">
+                  <ActionBtn
+                    SellerName={seller?.sellerName}
+                    SellerID={seller?._id}
+                    asin={seller?.sellerId}
+                    SellerStatus={seller.pauseStatus.status}
+                    pauseseller={handlePauseSeller}
+                    date={seller?.date}
+                  />
+                </button>
+                <h1 className="absolute top-4 right-14 bg-black p-1 w-7 h-7 flex justify-center items-center rounded-full text-white">
+                  {seller?.newProductCount}
+                </h1>
 
-              {/* Seller details */}
-              <div>
-                <div className="text-gray-800 font-semibold">
-                  {seller.sellerName}
-                </div>
-                <div className="text-sm text-gray-500">{seller.sellerId}</div>
-                <div className="mt-1 flex items-center">
-                  <span
-                    className="cursor-pointer text-lg px-1 py-1 border border-gray-300 rounded-md"
-                    onClick={() => toggleBookmark(index)}
-                  >
-                    {seller?.isSaved ? (
-                      <FaBookmark
-                        className="text-black"
-                        onClick={() => handleSaveSeller(seller?._id)}
-                      />
-                    ) : (
-                      <FaRegBookmark
-                        className="text-gray-500"
-                        onClick={() => handleSaveSeller(seller?._id)}
-                      />
-                    )}
-                  </span>
-                  <div className="shadow px-3 py-1 ml-3 flex justify-center items-center border border-gray-300 rounded-lg">
-                    <span>
-                      <FaRegSquare className="text-xs rounded-md bg-[rgb(247,254,231)]" />
+                {/* Seller details */}
+                <div>
+                  <div className="text-gray-800 text-sm font-semibold">
+                    {seller.sellerName}
+                  </div>
+                  <div className="text-sm text-gray-500">{seller.sellerId}</div>
+                  <div className="mt-1 flex items-center">
+                    <span
+                      className="cursor-pointer text-lg px-1 py-1 border border-gray-300 rounded-md"
+                      onClick={() => toggleBookmark(index)}
+                    >
+                      {seller?.isSaved ? (
+                        <FaBookmark
+                          className="text-black"
+                          onClick={() => handleSaveSeller(seller?._id)}
+                        />
+                      ) : (
+                        <FaRegBookmark
+                          className="text-gray-500"
+                          onClick={() => handleSaveSeller(seller?._id)}
+                        />
+                      )}
                     </span>
-                    <span className="text-sm text-gray-700 ml-2">
-                      {seller && seller.pauseStatus.status
-                        ? "Paused"
-                        : "Active"}
-                    </span>
+                    <div className="shadow px-3 py-1 ml-3 flex justify-center items-center border border-gray-300 rounded-lg">
+                      <span>
+                        <FaRegSquare className="text-xs rounded-md bg-[rgb(247,254,231)]" />
+                      </span>
+                      <span className="text-sm text-gray-700 ml-2">
+                        {seller && seller.pauseStatus.status
+                          ? "Paused"
+                          : "Active"}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
+            ))
+          ) : (
+            <div className="flex justify-center items-center py-10">
+              <span className="text-gray-500 text-sm font-semibold">
+                No data found
+              </span>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../Components/Loader";
@@ -24,7 +23,7 @@ const VerifyEmail = () => {
         //   }
         // );
         let response = await fetch(
-          `http://localhost:8000/auth/confirm-email/${token}`,
+          `https://ecomlenz-erafh6dqcbhac9fz.canadacentral-01.azurewebsites.net/auth/confirm-email/${token}`,
           {
             method: "POST",
             headers: {

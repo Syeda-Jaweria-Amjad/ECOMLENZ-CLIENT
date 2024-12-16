@@ -1,0 +1,261 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.pageContainer {
+  display: flex;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+/* Left Side */
+.leftSection {
+  flex: 1;
+  background: #0f172a;
+  color: #ffffff;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  height: 100vh;
+}
+
+.contentWrapper {
+  width: 100%;
+}
+
+.logo {
+  font-size: 2.5rem;
+  color: white;
+  font-weight: bold;
+  margin-bottom: 80px;
+}
+
+.planTitle {
+  font-size: 1rem;
+  margin: 10px 0;
+  color: #878b95;
+  font-weight: 700;
+}
+
+.trialOffer {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  margin: 10px 0;
+}
+
+.planDetails {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-bottom: 20px;
+}
+
+.planSummary,
+.subtotal,
+.total {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.subtext {
+  color: white;
+}
+
+.promoCode {
+  background: #1b2335;
+  color: #fff;
+  border: none;
+  padding: 12px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 10%;
+}
+
+.highlight {
+  color: white;
+  font-weight: bold;
+}
+
+/* Right Side ---->> Payment Details */
+.rightSection {
+  flex: 1;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  height: auto;
+}
+
+.contentWrapper {
+  max-width: 400px;
+  text-align: left;
+}
+
+.linkButton {
+  background: #00e676;
+  color: #fff;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 10px;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  margin-bottom: 20px;
+}
+
+.linkButton:hover {
+  background: #00c853;
+}
+
+.orText {
+  color: black;
+  margin: 20px 0;
+  font-size: 1rem;
+}
+
+.paymentForm {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 4%;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.inputField,
+.inputFieldSmall {
+  background: white;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 12px;
+  color: #fff;
+  width: 100%;
+  margin: 2%;
+}
+
+.inputFieldSmall {
+  width: 45%;
+}
+
+.inputField::placeholder {
+  color: #bbb;
+}
+
+.radioOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ccc;
+}
+
+.cardInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardDetails {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    flex-direction: column; 
+  }
+
+  .leftSection, .rightSection {
+    flex: none;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .contentWrapper {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .logo {
+    font-size: 2rem;
+  }
+
+  .planTitle {
+    font-size: 1.5rem;
+  }
+
+  .trialOffer {
+    font-size: 2rem;
+  }
+
+  .planDetails {
+    font-size: 1rem;
+  }
+
+  .promoCode {
+    padding: 10px 18px;
+  }
+
+  .linkButton {
+    padding: 12px 20px;
+  }
+
+  .inputField, .inputFieldSmall {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .paymentForm {
+    gap: 15px;
+  }
+}
+
+/* (Tablets) */
+@media (max-width: 1024px) {
+  .leftSection, .rightSection {
+    padding: 15px;
+  }
+
+  .logo {
+    font-size: 2.2rem;
+  }
+
+  .trialOffer {
+    font-size: 2rem;
+  }
+
+  .planTitle {
+    font-size: 1.8rem;
+  }
+
+  .planDetails {
+    font-size: 1.1rem;
+  }
+
+  .linkButton {
+    padding: 13px 22px;
+  }
+
+  .inputField, .inputFieldSmall {
+    padding: 11px;
+  }
+
+  .paymentForm {
+    gap: 18px;
+  }
+}
